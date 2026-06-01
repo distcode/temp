@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "iacLocation": {
+            "type": "string",
+            "allowedValues" : [
+                "North Europe",
+                "Austria East",
+                "Germany West Central",
+                "West Europe"
+            ],
+            "defaultValue" : "North Europe"
+        },
+        "iacVNetName": {
+            "type": "string",
+            "maxLength": 10
+        }
+    },
+    "variables": {
+        "iacVNetNameFull": "[concat('iac-',parameters('iacVNetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('iacVNetNameFull')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2024-05-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "Context": "IaC"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.200.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "Tier-1",
+                        "properties": {
+                            "addressPrefix": "10.200.0.0/24"
+                        }
+                    },
+                    {
+                        "name": "Tier-2",
+                        "properties": {
+                            "addressPrefix": "10.200.1.0/24"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "iacOutPut01": {
+            "type": "string",
+            "value": "Hello World!"
+        },
+        "iacLocation": {
+            "type": "string",
+            "value": "[parameters('iacLocation')]"
+        },
+        "iacVNetNameFull": {
+            "type": "string",
+            "value": "[variables('iacVNetNameFull')]"
+        }
+
+
+    }
+}
